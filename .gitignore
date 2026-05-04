@@ -63,7 +63,7 @@ next-env.d.ts
 **/__pycache__/
 
 # Frontend/Next.js specific (Path Adjusted)
-**/ .next/
+**/.next/
 **/out/
 **/build/
 **/next-env.d.ts
