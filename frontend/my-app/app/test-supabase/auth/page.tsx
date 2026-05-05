@@ -1,4 +1,4 @@
-import { login, register } from '@/app/(auth)/auth-actions';
+import { login, authWithGoogle, register } from '@/app/(auth)/auth-actions';
 
 export default function AuthTestPage() {
   return (
@@ -48,6 +48,16 @@ export default function AuthTestPage() {
           </button>
         </form>
       </div>
+
+      {/* OAUTH TEST FORM */}
+        <div style={{ marginTop: '20px' }}>
+          <h2>3. Test Google OAuth</h2>
+          <form action={authWithGoogle}>
+            <button type="submit" style={{ background: 'white', color: 'black', padding: '10px' }}>
+              Sign in with Google
+            </button>
+          </form>
+        </div>
 
     </div>
   );
