@@ -44,6 +44,13 @@ export default function UsersManagement({
   const emailKey = detectKey(sampleUser, EMAIL_KEYS);
   const primaryKey = detectKey(sampleUser, PRIMARY_KEYS) ?? "id";
 
+  const departmentStats = {
+    hr: users.filter((user) => normalizeText(getFieldValue(user, departmentKey)) === "hr").length,
+    solutions: users.filter((user) => normalizeText(getFieldValue(user, departmentKey)) === "solutions").length,
+    accounting: users.filter((user) => normalizeText(getFieldValue(user, departmentKey)) === "accounting").length,
+  };
+  const managerCount = users.filter((user) => normalizeText(getFieldValue(user, roleKey)) === "manager").length;
+
   const term = search.trim().toLowerCase();
   const filteredUsers = users.filter((user) => {
     const departmentValue = normalizeText(getFieldValue(user, departmentKey));
@@ -68,7 +75,6 @@ export default function UsersManagement({
 
   const totalPages = Math.max(1, Math.ceil(filteredUsers.length / PAGE_SIZE));
   const safeCurrentPage = Math.min(currentPage, totalPages);
-
   const paginatedUsers = filteredUsers.slice(
     (safeCurrentPage - 1) * PAGE_SIZE,
     safeCurrentPage * PAGE_SIZE,
@@ -102,24 +108,65 @@ export default function UsersManagement({
       <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.18),transparent_22%),linear-gradient(180deg,var(--admin-bg)_0%,#070b13_100%)]">
         <TopNav />
 
-        <section className="mx-auto max-w-370 px-5 pb-16 pt-28 sm:px-8">
-          <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-            <div className="space-y-6">
-              <header className="rounded-[28px] border border-(--admin-border) bg-[rgba(8,12,20,0.38)] p-8 shadow-[0_30px_80px_-40px_rgba(99,102,241,0.28)] backdrop-blur-sm">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-(--admin-accent-soft)">
-                  Admin / Users
-                </p>
-                <h1 className="mt-4 font-(--font-serif) text-5xl tracking-tighter text-(--admin-text-primary) sm:text-6xl">
-                  Users
-                </h1>
-                <p className="mt-5 max-w-3xl text-base leading-8 text-(--admin-text-secondary) sm:text-lg">
-                  Search every member, filter by department and role, update access levels, and inspect individual profile data from one table.
-                </p>
-              </header>
+        <section className="mx-auto max-w-7xl px-5 pb-16 pt-28 sm:px-8 2xl:max-w-375">
+          <div className="space-y-10">
+            <header className="rounded-[30px] border border-[rgba(72,95,201,0.42)] bg-[linear-gradient(180deg,rgba(25,30,52,0.92)_0%,rgba(20,24,40,0.92)_100%)] px-7 py-8 shadow-[0_0_50px_-28px_rgba(99,102,241,0.65)]">
+              <div className="flex flex-col gap-8 xl:flex-row xl:items-end xl:justify-between">
+                <div className="max-w-3xl">
+                  <p
+                    className="text-sm font-bold uppercase tracking-[0.18em] text-(--admin-accent-soft)"
+                    style={{ fontFamily: "var(--font-brand)" }}
+                  >
+                    People Administration
+                  </p>
+                  <h1
+                    className="mt-4 text-5xl font-bold tracking-tighter text-white sm:text-6xl"
+                    style={{ fontFamily: "var(--font-brand)" }}
+                  >
+                    Users
+                  </h1>
+                  <p className="mt-5 text-lg leading-8 text-(--admin-text-secondary)">
+                    Manage roles, review department coverage, and inspect every member from one control surface designed to match the room and dashboard views.
+                  </p>
+                </div>
 
-              <section className="admin-panel rounded-[28px] p-6">
-                <div className="flex flex-col gap-4 border-b border-(--admin-border) pb-6 xl:flex-row xl:items-end xl:justify-between">
-                  <div className="grid gap-4 md:grid-cols-3 xl:w-full xl:max-w-4xl">
+                <div className="grid gap-4 sm:grid-cols-4 xl:min-w-lg">
+                  <HeroBadge label="Total Users" value={String(users.length)} />
+                  <HeroBadge label="Managers" value={String(managerCount)} />
+                  <HeroBadge label="HR Team" value={String(departmentStats.hr)} />
+                  <HeroBadge label="Solutions" value={String(departmentStats.solutions)} />
+                </div>
+              </div>
+            </header>
+
+            <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+              <OverviewCard label="Filtered Users" value={String(filteredUsers.length)} note="Current search and filter result" />
+              <OverviewCard label="HR Department" value={String(departmentStats.hr)} note="People assigned to HR" />
+              <OverviewCard label="Solutions Dept." value={String(departmentStats.solutions)} note="People assigned to Solutions" />
+              <OverviewCard label="Accounting" value={String(departmentStats.accounting)} note="People assigned to Accounting" />
+            </section>
+
+            <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+              <section className="rounded-[30px] border border-[rgba(255,255,255,0.08)] bg-[rgba(27,31,41,0.92)] px-7 py-7">
+                <div className="flex flex-col gap-6 border-b border-[rgba(255,255,255,0.06)] pb-7">
+                  <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+                    <div>
+                      <h2
+                        className="text-[2rem] font-bold tracking-tighter text-white"
+                        style={{ fontFamily: "var(--font-brand)" }}
+                      >
+                        User Directory
+                      </h2>
+                      <p className="mt-2 text-base text-(--admin-text-secondary)">
+                        Search, filter, and update role assignments without leaving the directory.
+                      </p>
+                    </div>
+                    <span className="rounded-xl border border-[rgba(84,112,222,0.5)] bg-[rgba(47,68,148,0.16)] px-4 py-2 text-xl text-(--admin-accent-soft)">
+                      Page {safeCurrentPage} / {totalPages}
+                    </span>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-3">
                     <label className="block">
                       <span className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-(--admin-text-muted)">
                         Search
@@ -177,21 +224,15 @@ export default function UsersManagement({
                       </select>
                     </label>
                   </div>
-
-                  <div className="grid gap-3 sm:grid-cols-3 xl:min-w-70">
-                    <SummaryCard label="Total" value={String(users.length)} />
-                    <SummaryCard label="Filtered" value={String(filteredUsers.length)} />
-                    <SummaryCard label="Page" value={`${safeCurrentPage}/${totalPages}`} />
-                  </div>
                 </div>
 
                 {error ? (
-                  <div className="mt-4 rounded-xl border border-[rgba(239,68,68,0.28)] bg-[rgba(127,29,29,0.24)] px-4 py-3 text-sm text-red-200">
+                  <div className="mt-5 rounded-xl border border-[rgba(239,68,68,0.28)] bg-[rgba(127,29,29,0.24)] px-4 py-3 text-sm text-red-200">
                     {error}
                   </div>
                 ) : null}
 
-                <div className="mt-6 overflow-hidden rounded-2xl border border-(--admin-border)">
+                <div className="mt-7 overflow-hidden rounded-2xl border border-(--admin-border)">
                   <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-(--admin-border)">
                       <thead className="bg-[rgba(2,6,23,0.66)]">
@@ -231,7 +272,7 @@ export default function UsersManagement({
                               >
                                 <td className="px-6 py-4">
                                   <div className="flex items-center gap-3">
-                                    <div className="grid h-10 w-10 place-items-center rounded-full bg-[linear-gradient(135deg,#243b63_0%,#0f172a_100%)] text-xs font-bold text-white">
+                                    <div className="grid h-11 w-11 place-items-center rounded-full bg-[linear-gradient(135deg,#243b63_0%,#0f172a_100%)] text-xs font-bold text-white">
                                       {getInitials(displayName)}
                                     </div>
                                     <div>
@@ -296,7 +337,7 @@ export default function UsersManagement({
                   </div>
                 </div>
 
-                <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-sm text-(--admin-text-secondary)">
                     Showing {(safeCurrentPage - 1) * PAGE_SIZE + (paginatedUsers.length > 0 ? 1 : 0)}
                     {" "}to{" "}
@@ -323,26 +364,30 @@ export default function UsersManagement({
                   </div>
                 </div>
               </section>
-            </div>
 
-            <aside className="admin-panel h-fit rounded-[28px] p-6 xl:sticky xl:top-28">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-(--admin-accent-soft)">
-                User Details
-              </p>
-              {activeUser ? (
-                <UserDetailsCard
-                  user={activeUser}
-                  nameKey={nameKey}
-                  emailKey={emailKey}
-                  departmentKey={departmentKey}
-                  roleKey={roleKey}
-                />
-              ) : (
-                <p className="mt-6 text-sm text-(--admin-text-secondary)">
-                  Select user row to inspect profile information.
+              <section className="rounded-[30px] border border-[rgba(255,255,255,0.08)] bg-[rgba(27,31,41,0.92)] px-7 py-7">
+                <p
+                  className="text-sm font-bold uppercase tracking-[0.18em] text-(--admin-accent-soft)"
+                  style={{ fontFamily: "var(--font-brand)" }}
+                >
+                  Profile Detail
                 </p>
-              )}
-            </aside>
+
+                {activeUser ? (
+                  <UserDetailsCard
+                    user={activeUser}
+                    nameKey={nameKey}
+                    emailKey={emailKey}
+                    departmentKey={departmentKey}
+                    roleKey={roleKey}
+                  />
+                ) : (
+                  <p className="mt-6 text-sm text-(--admin-text-secondary)">
+                    Select user row to inspect profile information.
+                  </p>
+                )}
+              </section>
+            </div>
           </div>
         </section>
       </div>
@@ -350,15 +395,33 @@ export default function UsersManagement({
   );
 }
 
-function SummaryCard({ label, value }: { label: string; value: string }) {
+function HeroBadge({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-(--admin-border) bg-[rgba(2,6,23,0.48)] px-4 py-3">
-      <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-(--admin-text-muted)">
+    <div className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(11,14,24,0.55)] px-4 py-4">
+      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-(--admin-text-muted)">
         {label}
       </p>
-      <p className="mt-2 font-(--font-serif) text-3xl tracking-[-0.04em] text-white">
-        {value}
+      <p className="mt-3 text-3xl font-bold tracking-tighter text-white">{value}</p>
+    </div>
+  );
+}
+
+function OverviewCard({
+  label,
+  value,
+  note,
+}: {
+  label: string;
+  value: string;
+  note: string;
+}) {
+  return (
+    <div className="rounded-[28px] border border-[rgba(255,255,255,0.08)] bg-[rgba(27,31,41,0.92)] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+      <p className="text-xs font-bold uppercase tracking-[0.16em] text-(--admin-text-muted)">
+        {label}
       </p>
+      <p className="mt-4 text-[2.4rem] font-bold tracking-tighter text-white">{value}</p>
+      <p className="mt-2 text-sm leading-6 text-(--admin-text-secondary)">{note}</p>
     </div>
   );
 }
@@ -381,11 +444,14 @@ function UserDetailsCard({
   return (
     <div className="mt-6">
       <div className="flex items-center gap-4 border-b border-(--admin-border) pb-6">
-        <div className="grid h-14 w-14 place-items-center rounded-full bg-[linear-gradient(135deg,#243b63_0%,#0f172a_100%)] text-sm font-bold text-white">
+        <div className="grid h-16 w-16 place-items-center rounded-full bg-[linear-gradient(135deg,#243b63_0%,#0f172a_100%)] text-sm font-bold text-white">
           {getInitials(getDisplayName(user, nameKey))}
         </div>
         <div>
-          <h2 className="font-(--font-serif) text-3xl tracking-[-0.04em] text-white">
+          <h2
+            className="text-[2rem] font-bold tracking-tighter text-white"
+            style={{ fontFamily: "var(--font-brand)" }}
+          >
             {getDisplayName(user, nameKey)}
           </h2>
           <p className="mt-1 text-sm text-(--admin-text-secondary)">
@@ -394,7 +460,7 @@ function UserDetailsCard({
         </div>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+      <div className="mt-5 grid gap-3">
         <DetailPill label="Department" value={prettifyValue(getFieldValue(user, departmentKey))} />
         <DetailPill label="Role" value={prettifyValue(getFieldValue(user, roleKey))} />
       </div>
@@ -403,12 +469,12 @@ function UserDetailsCard({
         {detailEntries.map(([key, value]) => (
           <div
             key={key}
-            className="flex items-start justify-between gap-4 rounded-xl border border-[rgba(30,41,59,0.38)] bg-[rgba(2,6,23,0.4)] px-4 py-3"
+            className="flex items-start justify-between gap-4 rounded-2xl border border-[rgba(30,41,59,0.38)] bg-[rgba(2,6,23,0.4)] px-4 py-4"
           >
             <span className="text-xs font-bold uppercase tracking-[0.12em] text-(--admin-text-muted)">
               {humanizeKey(key)}
             </span>
-            <span className="max-w-52.5 text-right text-sm leading-6 text-(--admin-text-secondary)">
+            <span className="max-w-52 text-right text-sm leading-6 text-(--admin-text-secondary)">
               {prettifyValue(value)}
             </span>
           </div>
@@ -420,7 +486,7 @@ function UserDetailsCard({
 
 function DetailPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-(--admin-border) bg-[rgba(2,6,23,0.48)] px-4 py-3">
+    <div className="rounded-2xl border border-[rgba(255,255,255,0.05)] bg-[rgba(11,14,24,0.48)] px-4 py-4">
       <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-(--admin-text-muted)">
         {label}
       </p>
@@ -441,83 +507,45 @@ function BodyCell({ children }: { children: ReactNode }) {
   return <td className="px-6 py-4 text-sm text-(--admin-text-secondary)">{children}</td>;
 }
 
-function detectKey(
-  sample: UserRecord | null,
-  candidates: readonly string[],
-): string | null {
-  if (!sample) {
-    return null;
-  }
-
+function detectKey(sample: UserRecord | null, candidates: readonly string[]): string | null {
+  if (!sample) return null;
   for (const candidate of candidates) {
-    if (candidate in sample) {
-      return candidate;
-    }
+    if (candidate in sample) return candidate;
   }
-
   return null;
 }
 
 function getFieldValue(user: UserRecord, key: string | null): unknown {
-  if (!key) {
-    return null;
-  }
-
+  if (!key) return null;
   return user[key];
 }
 
 function prettifyValue(value: unknown): string {
-  if (value === null || value === undefined || value === "") {
-    return "Not set";
-  }
-
+  if (value === null || value === undefined || value === "") return "Not set";
   if (typeof value === "string") {
-    return value
-      .replace(/_/g, " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase());
+    return value.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
   }
-
-  if (typeof value === "boolean") {
-    return value ? "True" : "False";
-  }
-
-  if (typeof value === "object") {
-    return JSON.stringify(value);
-  }
-
+  if (typeof value === "boolean") return value ? "True" : "False";
+  if (typeof value === "object") return JSON.stringify(value);
   return String(value);
 }
 
 function normalizeText(value: unknown): string {
-  if (value === null || value === undefined) {
-    return "";
-  }
-
+  if (value === null || value === undefined) return "";
   return String(value).trim().toLowerCase();
 }
 
 function getDisplayName(user: UserRecord, nameKey: string | null): string {
   const fromKey = getFieldValue(user, nameKey);
-
-  if (typeof fromKey === "string" && fromKey.trim().length > 0) {
-    return fromKey;
-  }
-
+  if (typeof fromKey === "string" && fromKey.trim().length > 0) return fromKey;
   const emailValue = getFieldValue(user, detectKey(user, EMAIL_KEYS));
-  if (typeof emailValue === "string" && emailValue.includes("@")) {
-    return emailValue.split("@")[0];
-  }
-
+  if (typeof emailValue === "string" && emailValue.includes("@")) return emailValue.split("@")[0];
   return "Unknown User";
 }
 
 function getDisplayEmail(user: UserRecord, emailKey: string | null): string {
   const emailValue = getFieldValue(user, emailKey);
-
-  if (typeof emailValue === "string" && emailValue.trim().length > 0) {
-    return emailValue;
-  }
-
+  if (typeof emailValue === "string" && emailValue.trim().length > 0) return emailValue;
   return "No email";
 }
 
@@ -530,11 +558,7 @@ function getRowId(user: UserRecord, primaryKey: string): string {
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
-
-  if (parts.length === 0) {
-    return "NA";
-  }
-
+  if (parts.length === 0) return "NA";
   return parts
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase() ?? "")
@@ -547,16 +571,8 @@ function humanizeKey(key: string): string {
 
 function formatDateValue(user: UserRecord): string {
   const dateValue = user.created_at ?? user.createdAt ?? user.updated_at ?? user.updatedAt;
-
-  if (typeof dateValue !== "string" || dateValue.length === 0) {
-    return "Unknown";
-  }
-
+  if (typeof dateValue !== "string" || dateValue.length === 0) return "Unknown";
   const parsed = new Date(dateValue);
-
-  if (Number.isNaN(parsed.getTime())) {
-    return dateValue;
-  }
-
+  if (Number.isNaN(parsed.getTime())) return dateValue;
   return parsed.toLocaleDateString();
 }
