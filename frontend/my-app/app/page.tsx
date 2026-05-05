@@ -179,8 +179,8 @@ export default function Home() {
               <BellIcon />
             </button>
             <a
-              href="#"
-              className="rounded-lg bg-[var(--accent)] px-5 py-2 font-[var(--font-brand)] text-sm font-medium text-white shadow-[var(--shadow-button)] hover:-translate-y-px hover:bg-[#8c8eff]"
+              href="/login"
+              className="rounded-lg bg-[var(--accent)] px-5 py-2 font-[var(--font-brand)] text-sm font-medium text-white shadow-[var(--shadow-button)] hover:-translate-y-px hover:bg-[#0a4f54]"
             >
               Log In
             </a>
@@ -205,7 +205,7 @@ export default function Home() {
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
               <a
-                href="#"
+                href="/register"
                 className="vo-button-primary rounded-xl px-8 py-4 font-[var(--font-serif)] text-xl font-bold text-white"
               >
                 Get Started Free
