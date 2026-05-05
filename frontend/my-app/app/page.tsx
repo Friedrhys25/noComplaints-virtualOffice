@@ -36,20 +36,7 @@ const featureSections = [
   },
 ];
 
-const footerColumns = [
-  {
-    title: "PRODUCT",
-    links: ["DASHBOARD", "ROOMS", "ANALYTICS", "INTEGRATIONS"],
-  },
-  {
-    title: "COMPANY",
-    links: ["SECURITY", "STATUS", "CHANGELOG"],
-  },
-  {
-    title: "LEGAL",
-    links: ["PRIVACY POLICY", "TERMS OF SERVICE"],
-  },
-];
+
 
 function MoonIcon() {
   return (
@@ -147,37 +134,8 @@ export default function Home() {
             >
               VirtualOffice
             </a>
-            <nav className="hidden items-center gap-6 md:flex">
-              {["Dashboard", "Rooms", "Team", "Analytics"].map((item, index) => (
-                <a
-                  key={item}
-                  href="#"
-                  className={`pb-1 font-[var(--font-brand)] text-sm font-medium tracking-[-0.025em] ${
-                    index === 0
-                      ? "border-b-2 border-[var(--accent-strong)] text-[var(--accent)]"
-                      : "text-[var(--text-tertiary)] hover:text-white"
-                  }`}
-                >
-                  {item}
-                </a>
-              ))}
-            </nav>
           </div>
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              aria-label="Toggle theme"
-              className="rounded-lg p-2 text-[var(--text-tertiary)] hover:bg-[rgba(128,131,255,0.06)] hover:text-white"
-            >
-              <MoonIcon />
-            </button>
-            <button
-              type="button"
-              aria-label="Notifications"
-              className="rounded-lg p-2 text-[var(--text-tertiary)] hover:bg-[rgba(128,131,255,0.06)] hover:text-white"
-            >
-              <BellIcon />
-            </button>
             <a
               href="/login"
               className="rounded-lg bg-[var(--accent)] px-5 py-2 font-[var(--font-brand)] text-sm font-medium text-white shadow-[var(--shadow-button)] hover:-translate-y-px hover:bg-[#0a4f54]"
@@ -209,13 +167,6 @@ export default function Home() {
                 className="vo-button-primary rounded-xl px-8 py-4 font-[var(--font-serif)] text-xl font-bold text-white"
               >
                 Get Started Free
-              </a>
-              <a
-                href="#"
-                className="vo-button-secondary flex items-center justify-center gap-3 rounded-xl border border-[var(--border-strong)] px-7 py-4 font-[var(--font-serif)] text-xl font-bold text-white"
-              >
-                <PlayIcon />
-                Watch Demo
               </a>
             </div>
           </div>
@@ -302,36 +253,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 pb-24 sm:px-8">
-        <div
-          className="mx-auto max-w-6xl overflow-hidden rounded-3xl border border-[rgba(99,102,241,0.2)] px-6 py-16 text-center sm:px-10 lg:px-24"
-          style={{ background: "var(--bg-cta)" }}
-        >
-          <div className="pointer-events-none absolute" />
-          <h2 className="font-[var(--font-serif)] text-3xl font-bold tracking-[-0.03em] text-white sm:text-4xl">
-            Ready to elevate your team?
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-[var(--text-secondary)] sm:text-lg">
-            Join 2,000+ forward-thinking companies already building in
-            VirtualOffice. Free for teams up to 10.
-          </p>
-          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-            <a
-              href="#"
-              className="vo-button-primary rounded-xl px-8 py-4 font-[var(--font-serif)] text-xl font-bold text-white"
-            >
-              Start Building Now
-            </a>
-            <a
-              href="#"
-              className="vo-button-secondary rounded-xl border border-[var(--border-strong)] px-8 py-4 font-[var(--font-serif)] text-xl font-bold text-white"
-            >
-              Talk to Sales
-            </a>
-          </div>
-        </div>
-      </section>
-
       <footer className="border-t border-[#0f172a] bg-[var(--bg-footer)] px-5 pb-12 pt-12 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
@@ -344,39 +265,12 @@ export default function Home() {
                 by builders.
               </p>
             </div>
-
-            {footerColumns.map((column) => (
-              <div key={column.title}>
-                <div className="font-[var(--font-brand)] text-xs font-bold tracking-[0.14em] text-[var(--accent-strong)]">
-                  {column.title}
-                </div>
-                <div className="mt-4 space-y-3">
-                  {column.links.map((link) => (
-                    <a
-                      key={link}
-                      href="#"
-                      className="block font-[var(--font-brand)] text-xs tracking-[0.14em] text-[var(--text-faint)] hover:text-white"
-                    >
-                      {link}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ))}
           </div>
 
           <div className="mt-10 flex flex-col gap-5 border-t border-[#0f172a] pt-8 sm:flex-row sm:items-center sm:justify-between">
             <p className="font-[var(--font-brand)] text-[11px] tracking-[0.14em] text-[var(--text-faint)]">
               © 2024 VIRTUALOFFICE SPATIAL SYSTEMS
             </p>
-            <div className="flex items-center gap-4 text-[var(--text-faint)]">
-              <a href="#" aria-label="X / Twitter" className="hover:text-white">
-                <XIcon />
-              </a>
-              <a href="#" aria-label="LinkedIn" className="hover:text-white">
-                <LinkedinIcon />
-              </a>
-            </div>
           </div>
         </div>
       </footer>
