@@ -41,3 +41,29 @@ export async function register(formData: FormData) {
   revalidatePath('/', 'layout')
   redirect('/offices') //TODO: redirect to user's offices
 }
+
+/**
+ * Authenticates the user with Google OAuth.
+ * Note: this is an UPSERT operation (UPDATE if exists, INSERT if not).
+ * Basically login + register in one action.
+ */
+export async function authWithGoogle() { 
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: process.env.WORKING_URL + `/oauth-callback`, 
+    },
+  })
+
+  if (error) {
+    redirect('/login?error=Could not authenticate with Google')
+  }
+
+  // Supabase generates a secure Google URL. We redirect the user's browser to it.
+  if (data.url) {
+    redirect(data.url)
+  }
+}
