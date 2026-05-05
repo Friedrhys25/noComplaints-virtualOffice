@@ -65,19 +65,19 @@ const shortcuts = [
 
 export default function DashboardPage() {
   return (
-    <main className="admin-dashboard-theme min-h-screen bg-[var(--admin-bg)] text-[var(--admin-text-primary)]">
+    <main className="admin-dashboard-theme min-h-screen bg-(--admin-bg) text-(--admin-text-primary)">
       <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.18),transparent_22%),linear-gradient(180deg,var(--admin-bg)_0%,#070b13_100%)]">
         <TopNav />
 
         <div className="pl-0 pt-16 lg:pl-60">
-          <section className="mx-auto max-w-[1280px] px-5 pb-16 pt-8 sm:px-8 lg:px-8">
+          <section className="mx-auto max-w-7xl px-5 pb-16 pt-8 sm:px-8 lg:px-8">
             <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_310px]">
               <div className="space-y-8">
                 <header className="space-y-1">
-                  <p className="font-[var(--font-serif)] text-[3rem] leading-[1.05] tracking-[-0.04em] text-[var(--admin-text-primary)] sm:text-[3.35rem]">
+                  <p className="font-(--font-serif) text-[3rem] leading-[1.05] tracking-[-0.04em] text-(--admin-text-primary) sm:text-[3.35rem]">
                     Dashboard
                   </p>
-                  <p className="text-base leading-8 text-[var(--admin-text-secondary)] sm:text-lg">
+                  <p className="text-base leading-8 text-(--admin-text-secondary) sm:text-lg">
                     Welcome back, Alex. Your workspace is currently 84% active.
                   </p>
                 </header>
@@ -103,7 +103,7 @@ export default function DashboardPage() {
         <button
           type="button"
           aria-label="Create new workspace item"
-          className="admin-fab fixed bottom-8 right-8 z-20 grid h-14 w-14 place-items-center rounded-full bg-[var(--admin-accent)] text-white"
+          className="admin-fab fixed bottom-8 right-8 z-20 grid h-14 w-14 place-items-center rounded-full bg-(--admin-accent) text-white"
         >
           <PlusIcon />
         </button>
@@ -116,12 +116,12 @@ function StatCard({ stat }: { stat: Stat }) {
   return (
     <article className="admin-panel rounded-xl p-6">
       <div className="flex items-start justify-between gap-4">
-        <p className="max-w-[9rem] text-xs font-bold uppercase tracking-[0.14em] text-[var(--admin-text-muted)]">
+        <p className="max-w-36 text-xs font-bold uppercase tracking-[0.14em] text-(--admin-text-muted)">
           {stat.label}
         </p>
         <div
           className={`flex items-center gap-1 text-xs font-bold ${
-            stat.trendDirection === "up" ? "text-[var(--admin-success)]" : "text-[var(--admin-danger)]"
+            stat.trendDirection === "up" ? "text-(--admin-success)" : "text-(--admin-danger)"
           }`}
         >
           <TrendArrow direction={stat.trendDirection} />
@@ -129,13 +129,13 @@ function StatCard({ stat }: { stat: Stat }) {
         </div>
       </div>
 
-      <p className="mt-4 font-[var(--font-serif)] text-[2.3rem] leading-none tracking-[-0.03em] text-[var(--admin-text-primary)]">
+      <p className="mt-4 font-(--font-serif) text-[2.3rem] leading-none tracking-[-0.03em] text-(--admin-text-primary)">
         {stat.value}
       </p>
 
-      <div className="mt-7 h-1 overflow-hidden rounded-full bg-[var(--admin-progress-track)]">
+      <div className="mt-7 h-1 overflow-hidden rounded-full bg-(--admin-progress-track)">
         <div
-          className="h-full rounded-full bg-[var(--admin-accent-soft)]"
+          className="h-full rounded-full bg-(--admin-accent-soft)"
           style={{ width: `${stat.progress}%` }}
         />
       </div>
@@ -146,18 +146,18 @@ function StatCard({ stat }: { stat: Stat }) {
 function ActivityFeedCard({ items }: { items: Activity[] }) {
   return (
     <section className="admin-panel overflow-hidden rounded-2xl p-0">
-      <div className="flex items-center justify-between border-b border-[var(--admin-border)] px-6 py-6">
+      <div className="flex items-center justify-between border-b border-(--admin-border) px-6 py-6">
         <div>
-          <h2 className="font-[var(--font-serif)] text-[2rem] leading-none tracking-[-0.03em] text-[var(--admin-text-primary)]">
+          <h2 className="font-(--font-serif) text-[2rem] leading-none tracking-[-0.03em] text-(--admin-text-primary)">
             Activity Feed
           </h2>
-          <p className="mt-2 text-base text-[var(--admin-text-muted)]">
+          <p className="mt-2 text-base text-(--admin-text-muted)">
             Recent collaboration events in your workspace
           </p>
         </div>
         <button
           type="button"
-          className="text-sm font-medium text-[var(--admin-accent-soft)] hover:text-white"
+          className="text-sm font-medium text-(--admin-accent-soft) hover:text-white"
         >
           View All
         </button>
@@ -173,7 +173,7 @@ function ActivityFeedCard({ items }: { items: Activity[] }) {
 }
 
 function ActivityItem({ item }: { item: Activity }) {
-  const collaborators = item.collaborators;
+  const collaborators = item.collaborators ?? [];
 
   return (
     <article className="flex gap-4 rounded-xl p-4">
@@ -182,16 +182,16 @@ function ActivityItem({ item }: { item: Activity }) {
           {item.avatar}
         </div>
         <span
-          className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-[var(--admin-bg)]"
+          className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-(--admin-bg)"
           style={{ backgroundColor: item.statusColor }}
         />
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="max-w-[34rem] text-base leading-7 text-[var(--admin-text-primary)]">
+        <p className="max-w-136 text-base leading-7 text-(--admin-text-primary)">
           <span className="font-medium">{item.name}</span>{" "}
-          <span className="text-[var(--admin-text-muted)]">{item.action}</span>{" "}
-          <span className="text-[var(--admin-accent-soft)]">{item.target}</span>
+          <span className="text-(--admin-text-muted)">{item.action}</span>{" "}
+          <span className="text-(--admin-accent-soft)">{item.target}</span>
         </p>
 
         {collaborators ? (
@@ -199,7 +199,7 @@ function ActivityItem({ item }: { item: Activity }) {
             {collaborators.map((collaborator, index) => (
               <div
                 key={collaborator}
-                className="-ml-2 first:ml-0 grid h-6 w-6 place-items-center rounded-full border border-[var(--admin-panel-bg)] bg-[var(--admin-tile)] text-[10px] font-bold text-[var(--admin-text-secondary)]"
+                className="-ml-2 first:ml-0 grid h-6 w-6 place-items-center rounded-full border border-(--admin-panel-bg) bg-(--admin-tile) text-[10px] font-bold text-(--admin-text-secondary)"
                 style={{ zIndex: collaborators.length - index }}
               >
                 {collaborator}
@@ -213,7 +213,7 @@ function ActivityItem({ item }: { item: Activity }) {
             {item.attachments.map((attachment) => (
               <span
                 key={attachment}
-                className="rounded-md bg-[var(--admin-tile)] px-2 py-1 text-[10px] font-bold tracking-[0.12em] text-[var(--admin-accent-soft)]"
+                className="rounded-md bg-(--admin-tile) px-2 py-1 text-[10px] font-bold tracking-[0.12em] text-(--admin-accent-soft)"
               >
                 {attachment}
               </span>
@@ -221,13 +221,13 @@ function ActivityItem({ item }: { item: Activity }) {
           </div>
         ) : null}
 
-        <p className="mt-2 text-xs text-[var(--admin-text-muted)]">{item.timestamp}</p>
+        <p className="mt-2 text-xs text-(--admin-text-muted)">{item.timestamp}</p>
       </div>
 
       <button
         type="button"
         aria-label={`More actions for ${item.name}`}
-        className="self-start rounded-md p-2 text-[var(--admin-text-muted)] hover:bg-[var(--admin-tile)] hover:text-white"
+        className="self-start rounded-md p-2 text-(--admin-text-muted) hover:bg-(--admin-tile) hover:text-white"
       >
         <DotsIcon />
       </button>
@@ -240,17 +240,17 @@ function WorkspacePulseCard() {
     <PanelCard title="Workspace Pulse">
       <div className="space-y-3">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-[var(--admin-text-secondary)]">Server Status</span>
-          <span className="flex items-center gap-2 font-bold text-[var(--admin-success)]">
-            <span className="h-2 w-2 rounded-full bg-[var(--admin-success)]" />
+          <span className="text-(--admin-text-secondary)">Server Status</span>
+          <span className="flex items-center gap-2 font-bold text-(--admin-success)">
+            <span className="h-2 w-2 rounded-full bg-(--admin-success)" />
             Operational
           </span>
         </div>
         <div className="flex items-center justify-between text-sm">
-          <span className="text-[var(--admin-text-secondary)]">Meeting Load</span>
+          <span className="text-(--admin-text-secondary)">Meeting Load</span>
           <span className="font-bold text-[#f59e0b]">High</span>
         </div>
-        <div className="h-2 overflow-hidden rounded-full bg-[var(--admin-progress-track)]">
+        <div className="h-2 overflow-hidden rounded-full bg-(--admin-progress-track)">
           <div className="h-full w-[82%] rounded-full bg-[#f59e0b]" />
         </div>
       </div>
@@ -263,7 +263,7 @@ function UpgradeCard() {
     <section className="relative overflow-hidden rounded-2xl bg-[linear-gradient(135deg,#5b5ce6_0%,#6d63f5_55%,#5d5ef1_100%)] p-6 text-white">
       <div className="absolute -bottom-8 -right-6 h-28 w-28 rounded-full border border-[rgba(255,255,255,0.1)]" />
       <div className="absolute bottom-2 right-2 h-10 w-10 rounded-full border border-[rgba(255,255,255,0.1)]" />
-      <h2 className="max-w-[12rem] font-[var(--font-serif)] text-[2rem] leading-[1.05] tracking-[-0.03em]">
+      <h2 className="max-w-48 font-(--font-serif) text-[2rem] leading-[1.05] tracking-[-0.03em]">
         Upgrade for spatial audio
       </h2>
       <p className="mt-3 max-w-[16rem] text-sm leading-6 text-[rgba(255,255,255,0.82)]">
@@ -271,7 +271,7 @@ function UpgradeCard() {
       </p>
       <button
         type="button"
-        className="mt-5 rounded-lg bg-white px-4 py-2 text-sm font-bold text-[var(--admin-accent)] hover:-translate-y-px"
+        className="mt-5 rounded-lg bg-white px-4 py-2 text-sm font-bold text-(--admin-accent) hover:-translate-y-px"
       >
         Upgrade Now
       </button>
@@ -287,12 +287,12 @@ function ShortcutsCard() {
           <button
             key={shortcut.label}
             type="button"
-            className="rounded-xl bg-[var(--admin-tile)] px-4 py-5 text-center hover:border-[var(--admin-accent)] hover:bg-[rgba(99,102,241,0.12)]"
+            className="rounded-xl bg-(--admin-tile) px-4 py-5 text-center hover:border-(--admin-accent) hover:bg-[rgba(99,102,241,0.12)]"
           >
-            <span className="mx-auto mb-3 block w-fit text-[var(--admin-accent-soft)]">
+            <span className="mx-auto mb-3 block w-fit text-(--admin-accent-soft)">
               {shortcut.icon}
             </span>
-            <span className="text-xs font-medium text-[var(--admin-text-secondary)]">
+            <span className="text-xs font-medium text-(--admin-text-secondary)">
               {shortcut.label}
             </span>
           </button>
@@ -311,7 +311,7 @@ function PanelCard({
 }) {
   return (
     <section className="admin-panel rounded-2xl p-6">
-      <h2 className="font-[var(--font-serif)] text-[2rem] leading-none tracking-[-0.03em] text-[var(--admin-text-primary)]">
+      <h2 className="font-(--font-serif) text-[2rem] leading-none tracking-[-0.03em] text-(--admin-text-primary)">
         {title}
       </h2>
       <div className="mt-5">{children}</div>
