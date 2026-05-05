@@ -130,7 +130,7 @@ export default function Home() {
           <div className="flex items-center gap-6">
             <a
               href="#"
-              className="font-[var(--font-brand)] text-base font-bold tracking-[-0.04em] text-white sm:text-xl"
+              className="font-(--font-brand) text-base tracking-[-0.04em] text-white sm:text-xl"
             >
               VirtualOffice
             </a>
@@ -138,7 +138,7 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <a
               href="/login"
-              className="rounded-lg bg-[var(--accent)] px-5 py-2 font-[var(--font-brand)] text-sm font-medium text-white shadow-[var(--shadow-button)] hover:-translate-y-px hover:bg-[#0a4f54]"
+              className="rounded-lg bg-(--accent) px-5 py-2 font-(--font-brand) text-sm text-white shadow-(--shadow-button) hover:-translate-y-px hover:bg-[#0a4f54]"
             >
               Log In
             </a>
@@ -150,21 +150,21 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-x-0 top-12 h-72 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.14),transparent_52%)]" />
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-            <p className="font-[var(--font-serif)] text-[11px] font-bold uppercase tracking-[0.28em] text-[#c0c1ff] sm:text-xs">
+            <p className="font-(--font-serif) text-[11px] uppercase tracking-[0.28em] text-[#c0c1ff] sm:text-xs">
               SPATIAL COLLABORATION ENGINE V2.0
             </p>
-            <h1 className="mt-4 max-w-4xl font-[var(--font-serif)] text-5xl font-bold leading-[1.04] tracking-[-0.04em] text-white sm:text-6xl lg:text-[4rem]">
+            <h1 className="mt-4 max-w-4xl font-(--font-serif) text-5xl leading-[1.04] tracking-[-0.04em] text-white sm:text-6xl lg:text-[4rem]">
               Experience Work Beyond the{" "}
-              <span className="text-[var(--accent)]">Screen</span>.
+              <span className="text-(--accent)">Screen</span>.
             </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-[var(--text-secondary)] sm:text-lg">
+            <p className="mt-6 max-w-2xl text-base leading-8 text-(--text-secondary) sm:text-lg">
               The immersive spatial workspace designed for high-performance distributed
               teams. Connect, build, and scale in a persistent digital office.
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
               <a
                 href="/register"
-                className="vo-button-primary rounded-xl px-8 py-4 font-[var(--font-serif)] text-xl font-bold text-white"
+                className="vo-button-primary rounded-xl px-8 py-4 font-(--font-serif) text-xl text-white"
               >
                 Get Started Free
               </a>
@@ -197,13 +197,13 @@ export default function Home() {
               }`}
             >
               <div className={section.reverse ? "order-2 lg:order-2" : "order-2 lg:order-1"}>
-                <p className="font-[var(--font-serif)] text-sm font-bold uppercase tracking-[0.16em] text-[var(--accent-strong)]">
+                <p className="font-(--font-serif) text-sm uppercase tracking-[0.16em] text-(--accent-strong)">
                   {section.id}
                 </p>
-                <h2 className="mt-3 font-[var(--font-serif)] text-3xl font-bold leading-tight tracking-[-0.03em] text-white sm:text-4xl">
+                <h2 className="mt-3 font-(--font-serif) text-3xl leading-tight tracking-[-0.03em] text-white sm:text-4xl">
                   {section.title}
                 </h2>
-                <p className="mt-5 max-w-xl text-base leading-8 text-[var(--text-secondary)] sm:text-lg">
+                <p className="mt-5 max-w-xl text-base leading-8 text-(--text-secondary) sm:text-lg">
                   {section.description}
                 </p>
 
@@ -211,7 +211,7 @@ export default function Home() {
                   <ul className="mt-6 space-y-4 text-base text-[#e4e1ed]">
                     {section.bullets.map((bullet) => (
                       <li key={bullet} className="flex items-start gap-3 leading-7">
-                        <span className="text-[var(--accent)]">
+                        <span className="text-(--accent)">
                           <CheckIcon />
                         </span>
                         <span>{bullet}</span>
@@ -237,7 +237,7 @@ export default function Home() {
               <div className={section.reverse ? "order-1 lg:order-1" : "order-1 lg:order-2"}>
                 <div className="relative">
                   <div className="absolute -inset-4 bg-[rgba(99,102,241,0.1)] blur-3xl" />
-                  <div className="relative overflow-hidden rounded-2xl border border-[var(--border-base)]">
+                  <div className="relative overflow-hidden rounded-2xl border border-(--border-base)">
                     <Image
                       src={section.image}
                       alt={section.imageAlt}
@@ -253,14 +253,14 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="border-t border-[#0f172a] bg-[var(--bg-footer)] px-5 pb-12 pt-12 sm:px-8">
+      <footer className="border-t border-[#0f172a] bg-(--bg-footer) px-5 pb-12 pt-12 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
             <div>
-              <div className="font-[var(--font-brand)] text-lg font-bold tracking-[-0.04em] text-[var(--text-tertiary)]">
+              <div className="font-(--font-brand) text-lg tracking-[-0.04em] text-(--text-tertiary)">
                 VirtualOffice
               </div>
-              <p className="mt-4 max-w-xs text-sm leading-6 text-[var(--text-muted)]">
+              <p className="mt-4 max-w-xs text-sm leading-6 text-(--text-muted)">
                 Spatial operating systems for the future of work. Built for builders,
                 by builders.
               </p>
@@ -268,7 +268,7 @@ export default function Home() {
           </div>
 
           <div className="mt-10 flex flex-col gap-5 border-t border-[#0f172a] pt-8 sm:flex-row sm:items-center sm:justify-between">
-            <p className="font-[var(--font-brand)] text-[11px] tracking-[0.14em] text-[var(--text-faint)]">
+            <p className="font-(--font-brand) text-[11px] tracking-[0.14em] text-(--text-faint)">
               © 2024 VIRTUALOFFICE SPATIAL SYSTEMS
             </p>
           </div>
