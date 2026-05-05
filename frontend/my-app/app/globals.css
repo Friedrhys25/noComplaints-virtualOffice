@@ -106,6 +106,39 @@ a:focus-visible {
   border: 1px solid rgba(70, 69, 84, 0.2);
 }
 
+.admin-dashboard-theme {
+  --admin-bg: #080c14;
+  --admin-sidebar: #0f172a;
+  --admin-sidebar-deep: #020617;
+  --admin-panel-bg: #1b1b23;
+  --admin-tile: rgba(30, 41, 59, 0.5);
+  --admin-border: rgba(30, 41, 59, 0.5);
+  --admin-accent: #6366f1;
+  --admin-accent-strong: #585ad9;
+  --admin-accent-soft: #818cf8;
+  --admin-text-primary: #f0f4ff;
+  --admin-text-secondary: #94a3b8;
+  --admin-text-muted: #64748b;
+  --admin-progress-track: #1e293b;
+  --admin-success: #22c55e;
+  --admin-danger: #ef4444;
+}
+
+.admin-panel {
+  background: var(--admin-panel-bg);
+  border: 1px solid var(--admin-border);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.08);
+}
+
+.admin-fab {
+  box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.4);
+}
+
+.admin-fab:hover {
+  background: var(--admin-accent-strong);
+  transform: translateY(-1px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
