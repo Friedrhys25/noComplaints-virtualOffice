@@ -1,0 +1,43 @@
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+import { createClient } from '@/utils/supabase/server' 
+import { cookies } from 'next/headers'
+
+export async function login(formData: FormData) {
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
+  
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  
+  if (error) redirect('/login?error=Invalid credentials')
+  
+  revalidatePath('/', 'layout')
+  redirect('/offices') //TODO: redirect to user's offices
+}
+
+export async function register(formData: FormData) {
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
+  
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+  const name = formData.get('name') as string
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { name } // This maps exactly to new.raw_user_meta_data->>'name' in the SQL trigger
+    }
+  })
+
+  if (error) redirect('/login?error=Could not register')
+  
+  revalidatePath('/', 'layout')
+  redirect('/offices') //TODO: redirect to user's offices
+}
