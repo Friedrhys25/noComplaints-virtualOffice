@@ -71,12 +71,7 @@ function TopNav() {
 
         <div className="flex items-center gap-4 sm:gap-6">
 
-          <button
-            type="button"
-            className="rounded-lg bg-(--admin-accent) px-4 py-2 font-(--font-brand) text-sm text-white shadow-[0_10px_15px_-3px_rgba(99,102,241,0.2),0_4px_6px_-4px_rgba(99,102,241,0.2)] hover:-translate-y-px hover:bg-(--admin-accent-strong)"
-          >
-            Join Meeting
-          </button>
+          
 
           <div className="grid h-8 w-8 place-items-center rounded-full bg-[#334155] text-xs font-bold text-white shadow-[0_0_0_2px_#020617,0_0_0_4px_#1e293b]">
             AJ
