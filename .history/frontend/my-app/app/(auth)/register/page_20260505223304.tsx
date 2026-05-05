@@ -76,8 +76,8 @@
         <main className="vo-shell vo-grid min-h-screen px-5 py-6 text-[var(--text-primary)] sm:px-8 lg:p-0">
         <div className="mx-auto grid min-h-[calc(100vh-48px)] w-full max-w-7xl overflow-hidden rounded-3xl border border-[var(--border-base)] bg-[rgba(8,12,20,0.78)] shadow-[var(--shadow-hero)] backdrop-blur-xl lg:min-h-screen lg:grid-cols-[45fr_55fr] lg:rounded-none lg:border-0">
             <section className="relative hidden overflow-hidden border-r border-[var(--border-base)] p-10 lg:flex lg:flex-col lg:justify-between">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_18%,rgba(144,221,240,0.18),transparent_32%)]" />
-            <div className="absolute bottom-0 left-0 right-0 h-72 bg-[radial-gradient(circle_at_50%_100%,rgba(7,57,60,0.28),transparent_58%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_18%,rgba(128,131,255,0.24),transparent_32%)]" />
+            <div className="absolute bottom-0 left-0 right-0 h-72 bg-[radial-gradient(circle_at_50%_100%,rgba(99,102,241,0.18),transparent_58%)]" />
 
             <div className="relative z-10">
                 <Link href="/" className="inline-flex items-center gap-3 font-[var(--font-brand)] text-2xl font-bold tracking-[-0.04em]">
