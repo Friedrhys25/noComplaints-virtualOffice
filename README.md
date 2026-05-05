@@ -17,18 +17,18 @@ This platform allows users to:
 
 ## ⚙️ Local Setup
 
-### Frontend
+To install:
 ```bash
 cd frontend/my-app
 npm install
 ```
-
-> Retrieve a copy of the most recent `.env.local` file and put in `frontend/my-app/`
+> Always retrieve the latest `.env.local` file in `frontend/my-app/`.
 
 To run:
 ```bash
 npm run dev
 ```
+> Then access the locally ran website in your friendly neighborhood `http://localhost:3000`!
 
 ---
 
@@ -71,7 +71,7 @@ root/
 ├── frontend/
 │   └── my-app/  # Next.js app
 ├── backend/     # Python backend
-└── .gitignore
+├── .gitignore
 └── README.md
 ```
 
