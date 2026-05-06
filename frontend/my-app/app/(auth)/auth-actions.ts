@@ -1,3 +1,5 @@
+// TODO: Move to @actions/ folder
+
 'use server'
 
 import { revalidatePath } from 'next/cache'
@@ -44,8 +46,9 @@ export async function register(formData: FormData) {
 
 /**
  * Authenticates the user with Google OAuth.
+ * 
  * Note: this is an UPSERT operation (UPDATE if exists, INSERT if not).
- * Basically login + register in one action.
+ * Basically, login + register in one action.
  */
 export async function authWithGoogle() { 
   const cookieStore = await cookies()
