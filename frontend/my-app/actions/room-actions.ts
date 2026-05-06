@@ -2,7 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
-import { requireManagerOrOwner } from '../utils/guard'
+import { requireManagerOrOwner } from './utils/guard'
 
 
 export async function createRoom(officeId: string, name: string, type: string) {
