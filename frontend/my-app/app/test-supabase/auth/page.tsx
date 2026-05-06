@@ -1,4 +1,4 @@
-import { login, authWithGoogle, register } from '@/app/(auth)/auth-actions';
+import { login, authWithGoogle, register } from '@/actions/auth-actions';
 
 export default function AuthTestPage() {
   return (
