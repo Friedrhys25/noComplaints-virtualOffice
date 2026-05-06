@@ -8,6 +8,7 @@ const topLinks = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Users", href: "/users" },
   { label: "Rooms", href: "/rooms" },
+  { label: "Live Room", href: "/room" },
   { label: "Recordings", href: "/recordings" },
   { label: "Settings", href: "/settings" },
 ];
