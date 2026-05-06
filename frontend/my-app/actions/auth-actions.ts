@@ -1,5 +1,3 @@
-// TODO: Move to @actions/ folder
-
 'use server'
 
 import { revalidatePath } from 'next/cache'
