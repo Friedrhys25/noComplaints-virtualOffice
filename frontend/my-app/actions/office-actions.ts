@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { requireEmployee, requireManagerOrOwner, requireOwner } from './utils/guard'
 
 /**
  * `formData` should contain: 
@@ -35,8 +36,8 @@ export async function createOffice(formData: FormData) {
             type: 'owner'
         })
 
-    revalidatePath('/dashboard')
-    redirect(`/offices/${office.id}`) // TODO: redirect to specific office URL
+    revalidatePath('/offices')
+    redirect(`/${office.id}/dashboard`)
 }
 
 export async function joinOffice(invite_code: string) {
@@ -64,5 +65,222 @@ export async function joinOffice(invite_code: string) {
         })
 
     if (error) throw error
-    revalidatePath('/dashboard')
+    revalidatePath('/offices')
+}
+
+/**
+ * Fetch offices the current user belongs to.
+ *
+ * @returns Offices with the user's membership role (type).
+ * @throws Error if the user is not authenticated or queries fail.
+ */
+export async function getMyOffices(): Promise<Array<{ id: string; name: string; role: string }>> {
+  const supabase = createClient(await cookies())
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  const { data: memberships, error: membershipsError } = await supabase
+    .from('memberships')
+    .select('office_id, type')
+    .eq('user_id', user.id)
+
+  if (membershipsError) throw membershipsError
+  const officeIds = (memberships ?? []).map((m) => m.office_id).filter(Boolean)
+  if (officeIds.length === 0) return []
+
+  const { data: offices, error: officesError } = await supabase
+    .from('offices')
+    .select('id, name')
+    .in('id', officeIds)
+
+  if (officesError) throw officesError
+
+  const roleByOfficeId = new Map((memberships ?? []).map((m) => [m.office_id, m.type]))
+  return (offices ?? []).map((office) => ({
+    id: office.id,
+    name: office.name,
+    role: String(roleByOfficeId.get(office.id) ?? 'regular'),
+  }))
+}
+
+/**
+ * Fetch rooms for a given office.
+ *
+ * Security: requires the caller to be an employee of the office.
+ *
+ * @param officeId - `offices.id`
+ * @returns Rooms belonging to the office.
+ * @throws Error if unauthorized or query fails.
+ */
+export async function getOfficeRooms(
+  officeId: string,
+): Promise<Array<{ id: string; name: string; type: string; owner_id: string | null }>> {
+  const supabase = createClient(await cookies())
+  await requireEmployee(supabase, officeId)
+
+  const { data, error } = await supabase
+    .from('rooms')
+    .select('id, name, type, owner_id')
+    .eq('office_id', officeId)
+    .order('name', { ascending: true })
+
+  if (error) throw error
+  return (data ?? []) as Array<{ id: string; name: string; type: string; owner_id: string | null }>
+}
+
+/**
+ * Fetch members for a given office.
+ *
+ * Security: requires the caller to be a manager or owner of the office.
+ *
+ * @param officeId - `offices.id`
+ * @returns Member records with minimal user profile + membership role.
+ * @throws Error if unauthorized or queries fail.
+ */
+export async function getOfficeMembers(
+  officeId: string,
+): Promise<Array<{ user_id: string; role: string; user: Record<string, unknown> }>> {
+  const supabase = createClient(await cookies())
+  await requireManagerOrOwner(supabase, officeId)
+
+  const { data: memberships, error: membershipsError } = await supabase
+    .from('memberships')
+    .select('user_id, type')
+    .eq('office_id', officeId)
+
+  if (membershipsError) throw membershipsError
+  const userIds = (memberships ?? []).map((m) => m.user_id).filter(Boolean)
+  if (userIds.length === 0) return []
+
+  const { data: users, error: usersError } = await supabase
+    .from('users')
+    .select('*')
+    .in('id', userIds)
+
+  if (usersError) throw usersError
+
+  const userById = new Map((users ?? []).map((u) => [u.id, u as Record<string, unknown>]))
+  return (memberships ?? []).map((m) => ({
+    user_id: m.user_id,
+    role: m.type,
+    user: userById.get(m.user_id) ?? { id: m.user_id },
+  }))
+}
+
+/**
+ * Update a member's role within an office.
+ *
+ * Security: requires manager or owner for the office.
+ *
+ * @param prevState - Previous UI state from `useActionState` (unused).
+ * @param formData - Must contain:
+ * - `officeId` (string)
+ * - `userId` (string)
+ * - `role` (string: 'regular' | 'manager' | 'owner')
+ * @returns Status payload for UI feedback.
+ * @throws Error if unauthorized or update fails.
+ */
+export async function updateMemberRole(
+  _prevState: { ok: boolean; message: string } | undefined,
+  formData: FormData,
+): Promise<{ ok: boolean; message: string }> {
+  const supabase = createClient(await cookies())
+
+  const officeId = String(formData.get('officeId') ?? '').trim()
+  const userId = String(formData.get('userId') ?? '').trim()
+  const role = String(formData.get('role') ?? '').trim()
+
+  if (!officeId) return { ok: false, message: 'Office ID is required.' }
+  if (!userId) return { ok: false, message: 'User ID is required.' }
+  if (!role) return { ok: false, message: 'Role is required.' }
+
+  await requireManagerOrOwner(supabase, officeId)
+
+  const { error } = await supabase
+    .from('memberships')
+    .update({ type: role })
+    .eq('office_id', officeId)
+    .eq('user_id', userId)
+
+  if (error) throw error
+
+  revalidatePath(`/${officeId}/users`)
+  return { ok: true, message: 'Role updated.' }
+}
+
+/**
+ * Update office settings (currently: name).
+ *
+ * Security: owners only.
+ */
+export async function updateOfficeSettings(
+  _prevState: { ok: boolean; message: string } | undefined,
+  formData: FormData,
+): Promise<{ ok: boolean; message: string }> {
+  const supabase = createClient(await cookies())
+  const officeId = String(formData.get('officeId') ?? '').trim()
+  const name = String(formData.get('name') ?? '').trim()
+
+  if (!officeId) return { ok: false, message: 'Office ID is required.' }
+  if (!name) return { ok: false, message: 'Office name is required.' }
+
+  await requireOwner(supabase, officeId)
+
+  const { error } = await supabase
+    .from('offices')
+    .update({ name })
+    .eq('id', officeId)
+
+  if (error) throw error
+  revalidatePath(`/${officeId}/settings`)
+  return { ok: true, message: 'Office settings updated.' }
+}
+
+/**
+ * Leave an office by removing the current user's membership.
+ *
+ * Safety: prevents leaving if the current user is the last remaining owner.
+ */
+export async function leaveOffice(
+  _prevState: { ok: boolean; message: string } | undefined,
+  formData: FormData,
+): Promise<{ ok: boolean; message: string }> {
+  const supabase = createClient(await cookies())
+  const officeId = String(formData.get('officeId') ?? '').trim()
+  if (!officeId) return { ok: false, message: 'Office ID is required.' }
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  const { data: membership, error: membershipError } = await supabase
+    .from('memberships')
+    .select('id, type')
+    .eq('office_id', officeId)
+    .eq('user_id', user.id)
+    .single()
+
+  if (membershipError) throw membershipError
+
+  if (membership.type === 'owner') {
+    const { count, error: ownersCountError } = await supabase
+      .from('memberships')
+      .select('id', { count: 'exact', head: true })
+      .eq('office_id', officeId)
+      .eq('type', 'owner')
+
+    if (ownersCountError) throw ownersCountError
+    if ((count ?? 0) <= 1) {
+      throw new Error('You are the last owner. Transfer ownership before leaving this office.')
+    }
+  }
+
+  const { error: deleteError } = await supabase
+    .from('memberships')
+    .delete()
+    .eq('id', membership.id)
+
+  if (deleteError) throw deleteError
+
+  revalidatePath('/offices')
+  return { ok: true, message: 'You have left the office.' }
 }

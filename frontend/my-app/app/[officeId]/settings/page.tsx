@@ -1,6 +1,6 @@
-import AdminSectionPage from "../components/layout/AdminSectionPage";
+import AdminSectionPage from "@/app/components/layout/AdminSectionPage";
 
-export default function SettingsPage() {
+export default function OfficeSettingsPage() {
   return (
     <AdminSectionPage
       eyebrow="Admin / Settings"
@@ -9,3 +9,4 @@ export default function SettingsPage() {
     />
   );
 }
+
