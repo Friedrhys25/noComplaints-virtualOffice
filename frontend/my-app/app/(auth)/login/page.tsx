@@ -1,4 +1,9 @@
+    "use client";
+
     import Link from "next/link";
+    import { useMemo, useState } from "react";
+    import { useSearchParams } from "next/navigation";
+    import { authWithGoogle, login } from "@/actions/auth-actions";
 
     const workspaceCards = [
     { label: "Focus pods", value: "24", tone: "bg-[var(--accent-soft)] text-[var(--accent)]" },
@@ -57,6 +62,10 @@
     }
 
     export default function LoginPage() {
+    const searchParams = useSearchParams();
+    const errorMessage = useMemo(() => searchParams.get("error"), [searchParams]);
+    const [showPassword, setShowPassword] = useState(false);
+
     return (
         <main className="vo-shell vo-grid min-h-screen px-5 py-6 text-[var(--text-primary)] sm:px-8 lg:p-0">
         <div className="mx-auto grid min-h-[calc(100vh-48px)] w-full max-w-7xl overflow-hidden rounded-3xl border border-[var(--border-base)] bg-[rgba(8,12,20,0.78)] shadow-[var(--shadow-hero)] backdrop-blur-xl lg:min-h-screen lg:grid-cols-[45fr_55fr] lg:rounded-none lg:border-0">
@@ -134,12 +143,23 @@
                 Log in to your workspace.
                 </h2>
 
-                <form className="space-y-5">
+                {errorMessage ? (
+                  <div
+                    className="mt-6 rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200"
+                    role="alert"
+                  >
+                    {errorMessage}
+                  </div>
+                ) : null}
+
+                <form action={login} className="mt-6 space-y-5">
                 <label className="block">
                     <span className="mb-2 block text-sm font-semibold text-[var(--text-secondary)]">Email address</span>
                     <input
+                    name="email"
                     type="email"
                     placeholder="you@company.com"
+                    required
                     className="h-11 w-full rounded-xl border border-[var(--border-base)] bg-[rgba(15,23,42,0.5)] px-4 text-sm text-white placeholder:text-[var(--text-faint)] focus:border-[var(--accent)] focus:outline-none focus:ring-4 focus:ring-[var(--accent-glow)]"
                     />
                 </label>
@@ -147,11 +167,18 @@
                     <span className="mb-2 block text-sm font-semibold text-[var(--text-secondary)]">Password</span>
                     <span className="flex h-11 items-center rounded-xl border border-[var(--border-base)] bg-[rgba(15,23,42,0.5)] focus-within:border-[var(--accent)] focus-within:ring-4 focus-within:ring-[var(--accent-glow)]">
                     <input
-                        type="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
+                        required
                         className="h-full min-w-0 flex-1 bg-transparent px-4 text-sm text-white placeholder:text-[var(--text-faint)] focus:outline-none"
                     />
-                    <button type="button" aria-label="Show password" className="mr-3 rounded-lg p-1.5 text-[var(--text-tertiary)] hover:bg-[var(--accent-soft)] hover:text-white">
+                    <button
+                      type="button"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      onClick={() => setShowPassword((current) => !current)}
+                      className="mr-3 rounded-lg p-1.5 text-[var(--text-tertiary)] hover:bg-[var(--accent-soft)] hover:text-white"
+                    >
                         <EyeIcon />
                     </button>
                     </span>
@@ -171,6 +198,18 @@
                     Log In
                 </button>
                 </form>
+
+                <div className="mt-4">
+                  <form action={authWithGoogle}>
+                    <button
+                      type="submit"
+                      className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-[var(--border-base)] bg-[rgba(15,23,42,0.5)] text-sm font-semibold text-white transition hover:border-[rgba(99,102,241,0.5)] hover:bg-[rgba(15,23,42,0.7)]"
+                    >
+                      <GoogleIcon />
+                      Continue with Google
+                    </button>
+                  </form>
+                </div>
 
                 <p className="mt-8 text-center text-sm text-[var(--text-tertiary)]">
                 New to VirtualOffice?{" "}
