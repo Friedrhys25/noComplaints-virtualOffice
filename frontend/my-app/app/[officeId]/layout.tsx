@@ -14,11 +14,7 @@ export default async function OfficeLayout({
 
   const supabase = createClient(await cookies())
   
-  try {
-    await requireEmployeeOrHigher(supabase, officeId)
-  } catch (e) {
-    redirect('/offices?error=not_employed_there')
-  }
+  await requireEmployeeOrHigher(supabase, officeId)
 
   return (
     <div className="flex h-screen">

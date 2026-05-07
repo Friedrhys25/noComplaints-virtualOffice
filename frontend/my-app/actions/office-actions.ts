@@ -15,7 +15,7 @@ export async function createOffice(formData: FormData) {
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) 
-      redirect('/register?error=unauthenticated')
+      redirect('/login?error=unauthenticated')
       
     const name = formData.get('name') as string
 
@@ -26,8 +26,7 @@ export async function createOffice(formData: FormData) {
         .select()
         .single()
 
-    if (officeError) 
-      redirect('/offices?error=cant_create_office')
+    if (officeError) throw officeError
 
     // 2. Automatically make the creator an 'owner' member
     await supabase
@@ -47,7 +46,7 @@ export async function joinOffice(invite_code: string) {
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) 
-      redirect('/register?error=unauthenticated')
+      redirect('/login?error=unauthenticated')
 
     // 1 - Retrieve the office associated with the invite code
     const { data: invitations, error: invitationsError } = await supabase
@@ -82,7 +81,7 @@ export async function joinOffice(invite_code: string) {
 export async function getMyOffices(): Promise<Array<{ id: string; name: string; role: string }>> {
   const supabase = createClient(await cookies())
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/register?error=unauthenticated')
+  if (!user) redirect('/login?error=unauthenticated')
 
   const { data: memberships, error: membershipsError } = await supabase
     .from('memberships')
@@ -256,7 +255,7 @@ export async function leaveOffice(
   if (!officeId) return { ok: false, message: 'Office ID is required.' }
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/register?error=unauthenticated')
+  if (!user) redirect('/login?error=unauthenticated')
 
   const { data: membership, error: membershipError } = await supabase
     .from('memberships')
