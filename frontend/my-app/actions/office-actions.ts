@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { requireEmployee, requireManagerOrOwner, requireOwner } from './utils/guard'
+import { requireEmployeeOrHigher, requireManagerOrHigher, requireOwner } from './utils/guard'
 
 /**
  * `formData` should contain: 
@@ -14,8 +14,9 @@ export async function createOffice(formData: FormData) {
     const supabase = createClient(await cookies())
     const { data: { user } } = await supabase.auth.getUser()
 
-    if (!user) throw new Error("Unauthorized")
-
+    if (!user) 
+      redirect('/register?error=unauthenticated')
+      
     const name = formData.get('name') as string
 
     // 1. Create the office
@@ -25,7 +26,8 @@ export async function createOffice(formData: FormData) {
         .select()
         .single()
 
-    if (officeError) throw officeError
+    if (officeError) 
+      redirect('/offices?error=cant_create_office')
 
     // 2. Automatically make the creator an 'owner' member
     await supabase
@@ -44,7 +46,8 @@ export async function joinOffice(invite_code: string) {
     const supabase = createClient(await cookies())
     const { data: { user } } = await supabase.auth.getUser()
 
-    if (!user) throw new Error("Unauthorized user")
+    if (!user) 
+      redirect('/register?error=unauthenticated')
 
     // 1 - Retrieve the office associated with the invite code
     const { data: invitations, error: invitationsError } = await supabase
@@ -53,7 +56,8 @@ export async function joinOffice(invite_code: string) {
         .eq('invite_code', invite_code)
         .single()   
 
-    if (invitationsError) throw new Error(`Invalid invite code "${invite_code}". Full error: ${invitationsError.message}`)
+    if (invitationsError) 
+      redirect('/offices?error=invalid_invite_code')
 
     // 2 - Add the user to the office's members
     const { error } = await supabase
@@ -66,6 +70,7 @@ export async function joinOffice(invite_code: string) {
 
     if (error) throw error
     revalidatePath('/offices')
+    redirect(`/${invitations.office_id}/dashboard`)
 }
 
 /**
@@ -77,7 +82,7 @@ export async function joinOffice(invite_code: string) {
 export async function getMyOffices(): Promise<Array<{ id: string; name: string; role: string }>> {
   const supabase = createClient(await cookies())
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  if (!user) redirect('/register?error=unauthenticated')
 
   const { data: memberships, error: membershipsError } = await supabase
     .from('memberships')
@@ -85,6 +90,7 @@ export async function getMyOffices(): Promise<Array<{ id: string; name: string; 
     .eq('user_id', user.id)
 
   if (membershipsError) throw membershipsError
+
   const officeIds = (memberships ?? []).map((m) => m.office_id).filter(Boolean)
   if (officeIds.length === 0) return []
 
@@ -116,7 +122,7 @@ export async function getOfficeRooms(
   officeId: string,
 ): Promise<Array<{ id: string; name: string; type: string; owner_id: string | null }>> {
   const supabase = createClient(await cookies())
-  await requireEmployee(supabase, officeId)
+  await requireEmployeeOrHigher(supabase, officeId)
 
   const { data, error } = await supabase
     .from('rooms')
@@ -141,7 +147,7 @@ export async function getOfficeMembers(
   officeId: string,
 ): Promise<Array<{ user_id: string; role: string; user: Record<string, unknown> }>> {
   const supabase = createClient(await cookies())
-  await requireManagerOrOwner(supabase, officeId)
+  await requireManagerOrHigher(supabase, officeId)
 
   const { data: memberships, error: membershipsError } = await supabase
     .from('memberships')
@@ -194,7 +200,7 @@ export async function updateMemberRole(
   if (!userId) return { ok: false, message: 'User ID is required.' }
   if (!role) return { ok: false, message: 'Role is required.' }
 
-  await requireManagerOrOwner(supabase, officeId)
+  await requireManagerOrHigher(supabase, officeId)
 
   const { error } = await supabase
     .from('memberships')
@@ -250,7 +256,7 @@ export async function leaveOffice(
   if (!officeId) return { ok: false, message: 'Office ID is required.' }
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  if (!user) redirect('/register?error=unauthenticated')
 
   const { data: membership, error: membershipError } = await supabase
     .from('memberships')

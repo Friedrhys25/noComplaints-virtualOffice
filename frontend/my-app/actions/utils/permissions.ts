@@ -1,15 +1,15 @@
 import { SupabaseClient } from '@supabase/supabase-js'
 import { checkRole } from './action-helpers'
 
-/** Simple boolean check for Regular employees. Great for frontend use (conditional rendering). */
-export async function isEmployee(supabase: SupabaseClient, userId: string, officeId: string) {
-  const { hasRole } = await checkRole(supabase, userId, officeId, ['regular'])
+/** Simple boolean check for at least Regular employees. Great for frontend use (conditional rendering). */
+export async function isEmployeeOrHigher(supabase: SupabaseClient, userId: string, officeId: string) {
+  const { hasRole } = await checkRole(supabase, userId, officeId, ['regular', 'manager', 'owner'])
   return hasRole
 }
 
-/** Simple boolean check for Managers. Great for frontend use (conditional rendering). */
-export async function isManager(supabase: SupabaseClient, userId: string, officeId: string) {
-  const { hasRole } = await checkRole(supabase, userId, officeId, ['manager'])
+/** Simple boolean check for at least Managers. Great for frontend use (conditional rendering). */
+export async function isManagerOrHigher(supabase: SupabaseClient, userId: string, officeId: string) {
+  const { hasRole } = await checkRole(supabase, userId, officeId, ['manager', 'owner'])
   return hasRole
 }
 

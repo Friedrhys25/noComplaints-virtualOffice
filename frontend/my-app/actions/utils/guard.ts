@@ -1,5 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js'
 import { checkRole } from './action-helpers'
+import { redirect } from 'next/dist/client/components/navigation'
 
 /** 
  * The 'Gatekeeper' - all other guards use this 
@@ -8,7 +9,7 @@ import { checkRole } from './action-helpers'
  */
 async function requireUserLoggedIn(supabase: SupabaseClient) {
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('User not authenticated')
+  if (!user) redirect('/register?error=unauthenticated')
   return user
 }
 
@@ -18,11 +19,10 @@ async function requireUserLoggedIn(supabase: SupabaseClient) {
  * 
  * Returns the user object for convenience.
  */
-export async function requireEmployee(supabase: SupabaseClient, officeId: string) {
+export async function requireEmployeeOrHigher(supabase: SupabaseClient, officeId: string) {
   const user = await requireUserLoggedIn(supabase)
   const { hasRole } = await checkRole(supabase, user.id, officeId, ['regular', 'manager', 'owner'])
-  if (!hasRole) throw new Error('Unauthorized: User must be an employee of this office')
-
+  if (!hasRole) redirect('/offices?error=not_employed_there')
   return user
 }
 
@@ -32,10 +32,10 @@ export async function requireEmployee(supabase: SupabaseClient, officeId: string
  * 
  * Returns the user object for convenience.
  */
-export async function requireManagerOrOwner(supabase: SupabaseClient, officeId: string) {
+export async function requireManagerOrHigher(supabase: SupabaseClient, officeId: string) {
   const user = await requireUserLoggedIn(supabase)
   const { hasRole } = await checkRole(supabase, user.id, officeId, ['manager', 'owner'])
-  if (!hasRole) throw new Error('Unauthorized: Manager or Owner status required')
+  if (!hasRole) redirect('/offices?error=not_admin_there')
 
   return user
 }
@@ -49,7 +49,7 @@ export async function requireManagerOrOwner(supabase: SupabaseClient, officeId: 
 export async function requireOwner(supabase: SupabaseClient, officeId: string) {
   const user = await requireUserLoggedIn(supabase)
   const { hasRole } = await checkRole(supabase, user.id, officeId, ['owner'])
-  if (!hasRole) throw new Error('Unauthorized: Owner status required')
+  if (!hasRole) redirect('/offices?error=not_owner_there')
 
   return user
 }
