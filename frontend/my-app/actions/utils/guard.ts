@@ -9,7 +9,7 @@ import { redirect } from 'next/dist/client/components/navigation'
  */
 async function requireUserLoggedIn(supabase: SupabaseClient) {
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/register?error=unauthenticated')
+  if (!user) redirect('/login?error=unauthenticated')
   return user
 }
 
