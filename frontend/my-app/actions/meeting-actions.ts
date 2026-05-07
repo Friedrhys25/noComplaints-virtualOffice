@@ -15,6 +15,7 @@ export async function startMeeting(sessionId: string) {
     .single()
 
   if (error) throw error
+  
   return data
 }
 
