@@ -1,9 +1,4 @@
-"""
-FastAPI service that issues LiveKit JWT access tokens for clients joining a room.
-
-Set LIVEKIT_API_KEY and LIVEKIT_API_SECRET in a .env file in this directory (python-dotenv).
-Run from this folder: uvicorn main:app --reload --port 8000
-"""
+"""FastAPI service for LiveKit auth and post-meeting webhook processing."""
 
 import os
 
@@ -11,6 +6,9 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from livekit import api
+
+from app.routers.livekit_webhooks import router as livekit_webhooks_router
+from app.routers.recording import router as recording_router
 
 load_dotenv()
 
@@ -24,6 +22,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(livekit_webhooks_router)
+app.include_router(recording_router)
 
 
 @app.get("/get-token")

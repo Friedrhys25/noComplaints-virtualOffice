@@ -2,3 +2,7 @@ fastapi
 uvicorn
 livekit-api
 python-dotenv
+httpx
+openai
+google-generativeai
+supabase
