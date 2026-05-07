@@ -17,7 +17,7 @@ export async function login(formData: FormData) {
   if (error) redirect('/login?error=Invalid credentials')
   
   revalidatePath('/', 'layout')
-  redirect('/dashboard')
+  redirect('/offices')
 }
 
 export async function register(formData: FormData) {
@@ -39,7 +39,7 @@ export async function register(formData: FormData) {
   if (error) redirect('/login?error=Could not register')
   
   revalidatePath('/', 'layout')
-  redirect('/dashboard')
+  redirect('/offices')
 }
 
 /**
