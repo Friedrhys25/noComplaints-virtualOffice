@@ -2,16 +2,7 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-const topLinks = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Users", href: "/users" },
-  { label: "Rooms", href: "/rooms" },
-  { label: "Live Room", href: "/room" },
-  { label: "Recordings", href: "/recordings" },
-  { label: "Settings", href: "/settings" },
-];
+import { useParams, usePathname } from "next/navigation";
 
 type IconButtonProps = {
   ariaLabel: string;
@@ -32,12 +23,20 @@ function IconButton({ ariaLabel, badge, children }: IconButtonProps) {
   );
 }
 
-
-
-
-
 function TopNav() {
   const pathname = usePathname();
+
+  const params = useParams();
+  const officeId = params?.officeId;
+
+  const topLinks = [
+    { label: "Dashboard", href: `/${officeId}/dashboard` },
+    { label: "Users", href: `/${officeId}/users` },
+    { label: "Rooms", href: `/${officeId}/rooms` },
+    { label: "Live Room", href: `/${officeId}/room` },
+    { label: "Recordings", href: `/${officeId}/recordings` },
+    { label: "Settings", href: `/${officeId}/settings` },
+  ];
 
   return (
     <header className="fixed inset-x-0 top-0 z-30 h-16 border-b border-(--admin-border) bg-[rgba(8,12,20,0.72)] backdrop-blur-[10px]">
@@ -71,8 +70,6 @@ function TopNav() {
         </div>
 
         <div className="flex items-center gap-4 sm:gap-6">
-
-          
 
           <div className="grid h-8 w-8 place-items-center rounded-full bg-[#334155] text-xs font-bold text-white shadow-[0_0_0_2px_#020617,0_0_0_4px_#1e293b]">
             AJ
